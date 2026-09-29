@@ -82,6 +82,12 @@ def main():
         with torch.no_grad(), eval_rate():
             out = net.forward_one_frame(x, torch.tensor([qp]))
 
+        #print(out.keys()) 
+        by = out["bits_y"].sum().item()
+        bz = out["bits_z"].sum().item()
+        print(f"   bits_y={by:.0f}  bits_z={bz:.0f}  "
+              f"z share={100*bz/(by+bz):.1f}%  check bpp={(by+bz)/(H*W):.4f}")
+
         rgb_rec = ycbcr2rgb(out["x_hat"] + 0.5)
         rgb_rec = torch.clamp(rgb_rec * 255.0, 0, 255)[0].numpy()
 
